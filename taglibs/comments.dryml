@@ -1,0 +1,38 @@
+<def tag="card" for="Comment" attrs="gravatar">
+  <div class="card linkable comment">        
+    <gravatar:owner unless="&gravatar == 'false'" rating="pg" size="50" param />
+    <h5 param="card-heading"><You:owner /> wrote <view:created_at format="on %B %d, %Y at %I:%M%p" param="card-timestamp" />:</h5> 
+    <p class="card-body" param="default"><view:body /></p>
+    <delete-button class="actions" param />
+    <report-content-link />
+  </div>  
+</def>
+
+<def tag="comment-collection">
+	<div part="comment-collection">
+		<collection:comments />
+	</div>
+	<add-comment if="&current_user.signed_up?" 
+		with="&this.comments.new :owner => current_user" param />
+</def>
+
+<def tag="add-comment">
+	<form update="comment-collection" reset-form param>
+		<h6 param="heading">Add a comment</h6>
+		<input:body class="comment-body-input" param />
+		<after-submit uri="&object_url(this.commentable)" param />
+		<submit label="Add Comment" param />
+	</form>
+</def>
+
+<extend tag="show-page">
+	<old-show-page merge>
+		<append-content-body:>
+			<section class="collection-section" if="&this.respond_to?(:comments) and !this.try.standard" param="comments">
+				<h3 param="comment-collection-heading">Comments</h3>
+				<comment-collection param />
+			</section>
+		</append-content-body:>
+	</old-show-page>
+</extend>
+

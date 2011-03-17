@@ -1,0 +1,63 @@
+Hobo Plugins Comments
+===============================
+
+Provides a polymorphic comment model, controller and taglib.
+
+Models:
+	comments
+		Owned model creatable only by signed in users by default.  Changes and deletion by administrator only.
+		
+Controllers:
+  comments
+    Provides only create and destroy actions.
+
+Views:
+	Modifies the show-page to add a comment collection and new comment form after the content-body.  Use <show-page without-comments /> to remove this.
+
+Tags:
+  card for="Comment"
+    Parameters:
+      gravatar
+      card-heading
+      default
+      actions
+		Basically a standard card but with gravatar added.
+
+  comment-collection
+    Parameters:
+      add-comment:
+		The collection of comments being inside a part, can't have a parameter assigned to it.
+  
+	add-comment
+		Parameters:
+			form
+				heading
+				input
+				after-submit
+				submit
+		Does an ajax update of the comment collection by default
+
+	show-page extension
+		Paramters:
+			comments
+				collection-heading
+				comment-collection
+		Extends **all** show pages.  Only adds tag if the context responds to comments.
+  
+Example
+=======
+
+Include this at the begining of your application.dryml after rapid or auto taglib includes (if present).
+<include src="comments" plugin="hobo_plugins_comments" />
+
+Add to the model you want comments on:
+  has_many :comments, :as => :commentable
+
+That's it though I strongly suggest adding fragment caching on the comment collection to avoid performance issues on pages with many comments.
+
+Note
+====
+
+This plugin requires Hobo (www.hobocentral.net) but is not affiliated with it.  It needs to load after hobo and prefixing it with hobo_plugins both ensures that and implies that hobo is required.
+
+Copyright (c) 2011 [Kevin Potter], released under the MIT license
